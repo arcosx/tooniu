@@ -12,6 +12,32 @@ from django.contrib.auth import get_user_model, authenticate  # If used custom u
 from rest_framework import permissions
 
 from django.contrib.auth.models import User
+# ---------------------------------------------------------------
+from urllib import parse
+import http.client
+import random
+
+key = "7720028ac388fe8b413e2cd91a532307"  # 云片网个人秘钥
+text = "【图牛团队】感谢您注册图牛，您的验证码是"  # 云片网模板语言
+
+
+def send_sms(apikey, text, mobile):
+    # 服务地址
+    sms_host = "sms.yunpian.com"
+    # 端口号
+    port = 443
+    # 版本号
+    version = "v2"
+    # 智能匹配模板短信接口的URI
+    sms_send_uri = "/" + version + "/sms/single_send.json"
+    params = parse.urlencode({'apikey': apikey, 'text': text, 'mobile': mobile})
+    headers = {"Content-type": "application/x-www-form-urlencoded", "Accept": "text/plain"}
+    conn = http.client.HTTPSConnection(sms_host, port=port, timeout=30)
+    conn.request("POST", sms_send_uri, params, headers)
+    response = conn.getresponse()
+    response_str = response.read()
+    conn.close()
+    return response_str
 
 
 # -----------------------斗图圈的Views---------------------------
@@ -38,7 +64,7 @@ class UserProfileList(generics.ListAPIView):
     serializer_class = UserProfileSerializer
 
 
-class UserProfileDetail(generics.RetrieveUpdateDestroyAPIView):
+class UserProfileDetail(generics.ListCreateAPIView):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
@@ -104,6 +130,16 @@ class CreatUserView(CreateAPIView):
     serializer_class = UserSerializer
 
 
+@api_view(['GET', 'POST'])
+def VerificationCode(request):
+    if request.method == 'POST':
+        phonenumber = request.data['phonenumber']
+        verificationcode = request.data['verificationcode']
+        res_str = send_sms(key, text + verificationcode, phonenumber)
+        return Response(res_str)
+    return Response({"message": "please give me a phonenumber and verificationcode!"})
+
+
 # ---------设置总路径-------------
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -114,5 +150,6 @@ def api_root(request, format=None):
         'loop-star': reverse('star-list', request=request, format=format),
         'up-picture': reverse('picture-up-list', request=request, format=format),
         'register': reverse('register', request=request, format=format),
-        'login':reverse('login',request=request,format=format)
+        'login': reverse('login', request=request, format=format),
+        'verificationCode': reverse('verificationcode', request=request, format=format)
     })

@@ -26,3 +26,4 @@ class Star(models.Model):
     Picture = models.ForeignKey(Picture, related_name='Picture_Star')
     Star_People = models.ForeignKey('main.UserProfile', related_name='UserProfile_Star')  # 点赞的用户
     Push_Time = models.DateTimeField(auto_now_add=True)  # 发送时间
+

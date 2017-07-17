@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^up/picture/(?P<pk>[0-9]+)/$', views.Picture_Up_Detail.as_view(), name='picture-up-detail'),
     url(r'^register/$', views.CreatUserView.as_view(), name='register'),
     url(r'^login/', obtain_jwt_token, name='login'),
+    url(r'^verificationCode/$', views.VerificationCode, name='verificationcode')
 ]
