@@ -24,7 +24,7 @@ SECRET_KEY = '$o8ucey^p#0kq)8)i#gj#%n#t1&k%npb9)j0#bw*5-9_zvw&=1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['120.24.73.105', '127.0.0.1']
 
 # Application definition
 
@@ -84,7 +84,11 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
     'PAGE_SIZE': 10
 }
 
@@ -126,8 +130,8 @@ AUTH_PROFILE_MODULE = 'main.UserProfile'
 
 DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuStorage'
 QINIU_ACCESS_KEY = 'FJcHkMNZLlYlbKFE0PwpF8IGo1kGPnh2kRwqLkdN'
-QINIU_SECRET_KEY	= '22Yt8MWlbnWrE7EzeM1j5C5BpsiwLk78rOmQS-Rp'
-QINIU_BUCKET_NAME	= 'toonew'
+QINIU_SECRET_KEY = '22Yt8MWlbnWrE7EzeM1j5C5BpsiwLk78rOmQS-Rp'
+QINIU_BUCKET_NAME = 'toonew'
 QINIU_BUCKET_DOMAIN = 'osvg8uk9j.bkt.clouddn.com'
 
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
