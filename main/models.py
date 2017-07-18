@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class UserProfile(models.Model):
     User = models.OneToOneField('auth.User', unique=True, verbose_name='用户信息')
-    Username = models.CharField(max_length=11)
+    Username = models.CharField(max_length=11)  # 昵称
 
 
 class Picture(models.Model):
@@ -26,4 +26,3 @@ class Star(models.Model):
     Picture = models.ForeignKey(Picture, related_name='Picture_Star')
     Star_People = models.ForeignKey('main.UserProfile', related_name='UserProfile_Star')  # 点赞的用户
     Push_Time = models.DateTimeField(auto_now_add=True)  # 发送时间
-
